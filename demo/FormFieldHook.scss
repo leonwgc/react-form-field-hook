@@ -1,0 +1,31 @@
+/**
+ * @author leon.wang
+ */
+
+.form-field-hook {
+  &__header {
+    margin-bottom: 24px;
+  }
+
+  &__card {
+    height: 100%;
+
+    .ant-card-body {
+      min-height: 200px;
+    }
+  }
+
+  &__error {
+    color: #ff4d4f;
+    font-size: 14px;
+    margin-top: 4px;
+    line-height: 1.5;
+  }
+
+  &__states {
+    margin-top: 12px;
+    padding: 12px;
+    background-color: #f5f5f5;
+    border-radius: 4px;
+  }
+}

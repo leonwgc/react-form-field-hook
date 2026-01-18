@@ -1,0 +1,61 @@
+{
+  "name": "use-form-field",
+  "version": "1.0.1",
+  "description": "⚡️ A lightweight React hook for managing form field state.",
+  "keywords": [
+    "react",
+    "form",
+    "hooks"
+  ],
+  "license": "MIT",
+  "repository": "https://github.com/leonwgc/use-form-field",
+  "bugs": {
+    "url": "https://github.com/leonwgc/use-form-field/issues"
+  },
+  "main": "dist/index.cjs.js",
+  "module": "dist/index.esm.js",
+  "typings": "types/index.d.ts",
+  "scripts": {
+    "build": "tsup && tsc",
+    "dev": "tsup --watch",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "prepublishOnly": "npm run build",
+    "publish--patch": "./publish.sh patch",
+    "publish--minor": "./publish.sh minor",
+    "publish--major": "./publish.sh major"
+  },
+  "peerDependencies": {
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0"
+  },
+  "devDependencies": {
+    "@testing-library/react": "^14.3.1",
+    "@types/node": "^25.0.3",
+    "@types/react": "^18.0.0",
+    "@types/react-dom": "^18.0.10",
+    "@typescript-eslint/eslint-plugin": "^5.6.0",
+    "@typescript-eslint/parser": "^5.6.0",
+    "@vitejs/plugin-react": "^4.7.0",
+    "@vitest/coverage-v8": "^1.6.1",
+    "antd": "^6.1.4",
+    "eslint": "^8.34.0",
+    "eslint-plugin-react": "^7.19.0",
+    "eslint-plugin-react-hooks": "^2.5.0",
+    "jsdom": "^23.2.0",
+    "packrs": "^1.0.1",
+    "prettier": "^2.2.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "tsup": "^8.3.6",
+    "typescript": "^5.7.3",
+    "vitest": "^1.6.1",
+    "yargs": "^15.3.1",
+    "zustand": "^5.0.9"
+  },
+  "files": [
+    "dist",
+    "types"
+  ]
+}
