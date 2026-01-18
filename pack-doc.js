@@ -6,7 +6,7 @@ build({
   dist: './docs',
   rsConfig: {
     html: {
-      title: 'Zustand-Kit Demo',
+      title: 'use-form-field Demo',
     },
     output: {
       assetPrefix: './',
