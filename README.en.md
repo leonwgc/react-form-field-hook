@@ -90,7 +90,7 @@ return (
 ### Managing Multiple Fields
 
 ```tsx
-const { fields, validateAll, resetAll } = useFormFields({
+const { fields, validateAll, resetAll, getValues } = useFormFields({
   username: {
     initialValue: '',
     rules: [validators.required(), validators.minLength(3)],
@@ -108,11 +108,7 @@ const { fields, validateAll, resetAll } = useFormFields({
 const handleSubmit = async () => {
   const isValid = await validateAll();
   if (isValid) {
-    const formData = {
-      username: fields.username.value,
-      email: fields.email.value,
-      password: fields.password.value,
-    };
+    const formData = getValues();
     // Submit form...
   }
 };
