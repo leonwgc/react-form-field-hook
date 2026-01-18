@@ -238,9 +238,9 @@ export interface FormActions<T extends Record<string, unknown>> {
     /** Set multiple field values at once */
     setValues: (values: Partial<T>) => void;
     /** Check if any field is dirty */
-    isDirty: () => boolean;
+    isDirty: boolean;
     /** Check if all fields are valid */
-    isValid: () => boolean;
+    isValid: boolean;
     /** Get all errors as an object */
     getErrors: () => Partial<Record<keyof T, string | null>>;
     /** Set initial values (useful for edit forms) */
@@ -248,7 +248,7 @@ export interface FormActions<T extends Record<string, unknown>> {
     /** Set disabled state for all fields */
     setDisabled: (disabled: boolean) => void;
     /** Check if all fields are disabled */
-    isDisabled: () => boolean;
+    isDisabled: boolean;
 }
 /**
  * Hook for managing multiple form fields at once
