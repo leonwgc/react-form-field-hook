@@ -6,7 +6,7 @@ build({
   dist: './docs',
   rsConfig: {
     html: {
-      title: 'use-form-field Demo',
+      title: 'react-form-field-hook Demo',
     },
     output: {
       assetPrefix: './',

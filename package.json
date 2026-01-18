@@ -1,5 +1,5 @@
 {
-  "name": "use-form-field",
+  "name": "react-form-field-hook",
   "version": "1.0.0",
   "description": "⚡️ A lightweight React hook for managing form field state.",
   "keywords": [
@@ -8,9 +8,9 @@
     "hooks"
   ],
   "license": "MIT",
-  "repository": "https://github.com/leonwgc/use-form-field",
+  "repository": "https://github.com/leonwgc/react-form-field-hook",
   "bugs": {
-    "url": "https://github.com/leonwgc/use-form-field/issues"
+    "url": "https://github.com/leonwgc/react-form-field-hook/issues"
   },
   "main": "dist/index.cjs.js",
   "module": "dist/index.esm.js",

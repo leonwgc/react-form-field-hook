@@ -1,4 +1,4 @@
-# use-form-field
+# react-form-field-hook
 
 ⚡️ 一个轻量级的 React Hook，用于管理表单字段状态。
 
@@ -17,11 +17,11 @@
 ## 📦 安装
 
 ```bash
-npm install use-form-field
+npm install react-form-field-hook
 # 或
-yarn add use-form-field
+yarn add react-form-field-hook
 # 或
-pnpm add use-form-field
+pnpm add react-form-field-hook
 ```
 
 ## 🚀 快速开始
@@ -29,7 +29,7 @@ pnpm add use-form-field
 ### 基础用法
 
 ```tsx
-import { useFormField, validators } from 'use-form-field';
+import { useFormField, validators } from 'react-form-field-hook';
 import { Input, Button } from 'antd';
 
 function MyForm() {
@@ -358,6 +358,6 @@ MIT © [leonwgc](https://github.com/leonwgc)
 
 ## 🔗 相关链接
 
-- [GitHub 仓库](https://github.com/leonwgc/use-form-field)
-- [问题反馈](https://github.com/leonwgc/use-form-field/issues)
-- [更新日志](https://github.com/leonwgc/use-form-field/releases)
+- [GitHub 仓库](https://github.com/leonwgc/react-form-field-hook)
+- [问题反馈](https://github.com/leonwgc/react-form-field-hook/issues)
+- [更新日志](https://github.com/leonwgc/react-form-field-hook/releases)

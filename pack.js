@@ -7,7 +7,7 @@ run({
   port: 9008,
   rsConfig: {
     html: {
-      title: 'use-form-field Demo',
+      title: 'react-form-field-hook Demo',
     },
     server: {
       open: true,

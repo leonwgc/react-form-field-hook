@@ -1,4 +1,4 @@
-# use-form-field
+# react-form-field-hook
 
 ⚡️ A lightweight React hook for managing form field state.
 
@@ -17,11 +17,11 @@ English | [简体中文](./README.md)
 ## 📦 Installation
 
 ```bash
-npm install use-form-field
+npm install react-form-field-hook
 # or
-yarn add use-form-field
+yarn add react-form-field-hook
 # or
-pnpm add use-form-field
+pnpm add react-form-field-hook
 ```
 
 ## 🚀 Quick Start
@@ -29,7 +29,7 @@ pnpm add use-form-field
 ### Basic Usage
 
 ```tsx
-import { useFormField, validators } from 'use-form-field';
+import { useFormField, validators } from 'react-form-field-hook';
 import { Input, Button } from 'antd';
 
 function MyForm() {
@@ -358,6 +358,6 @@ MIT © [leonwgc](https://github.com/leonwgc)
 
 ## 🔗 Links
 
-- [GitHub Repository](https://github.com/leonwgc/use-form-field)
-- [Issue Tracker](https://github.com/leonwgc/use-form-field/issues)
-- [Changelog](https://github.com/leonwgc/use-form-field/releases)
+- [GitHub Repository](https://github.com/leonwgc/react-form-field-hook)
+- [Issue Tracker](https://github.com/leonwgc/react-form-field-hook/issues)
+- [Changelog](https://github.com/leonwgc/react-form-field-hook/releases)
