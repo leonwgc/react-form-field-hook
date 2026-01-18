@@ -2,7 +2,7 @@
  * @file src/index.tsx
  * @author leon.wang
  */
-
+import React from 'react';
 import { useState, useCallback, useRef, useEffect, useMemo } from 'react';
 
 /**
