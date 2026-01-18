@@ -4,7 +4,7 @@
  */
 
 import { describe, it, expect } from 'vitest';
-import { renderHook, act } from '@testing-library/react';
+import { renderHook, act, waitFor } from '@testing-library/react';
 import { useFormFields, validators } from '../src/index';
 
 describe('useFormFields', () => {
@@ -45,7 +45,7 @@ describe('useFormFields', () => {
       expect(isValid).toBe(false);
     });
 
-    it('resetAll 应该重置所有字段', () => {
+    it('resetAll 应该重置所有字段', async () => {
       const { result } = renderHook(() =>
         useFormFields({
           username: { initialValue: 'initial' },
@@ -53,12 +53,12 @@ describe('useFormFields', () => {
         }),
       );
 
-      act(() => {
+      await act(async () => {
         result.current.fields.username.onChange('changed');
         result.current.fields.email.onChange('new@example.com');
       });
 
-      act(() => {
+      await act(async () => {
         result.current.form.resetAll();
       });
 
@@ -101,7 +101,7 @@ describe('useFormFields', () => {
       expect(result.current.fields.email.value).toBe('john@example.com');
     });
 
-    it('isDirty 应该检测字段是否被修改', () => {
+    it('isDirty 应该检测字段是否被修改', async () => {
       const { result } = renderHook(() =>
         useFormFields({
           username: { initialValue: 'john' },
@@ -110,7 +110,7 @@ describe('useFormFields', () => {
 
       expect(result.current.form.isDirty()).toBe(false);
 
-      act(() => {
+      await act(async () => {
         result.current.fields.username.onChange('jane');
       });
 

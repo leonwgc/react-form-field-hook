@@ -4,7 +4,7 @@
  */
 
 import { describe, it, expect, vi } from 'vitest';
-import { renderHook, act } from '@testing-library/react';
+import { renderHook, act, waitFor } from '@testing-library/react';
 import { useFormField, validators } from '../src/index';
 
 describe('useFormField', () => {
@@ -29,10 +29,10 @@ describe('useFormField', () => {
   });
 
   describe('值变化', () => {
-    it('应该更新值', () => {
+    it('应该更新值', async () => {
       const { result } = renderHook(() => useFormField());
 
-      act(() => {
+      await act(async () => {
         result.current.onChange('new value');
       });
 
@@ -40,11 +40,11 @@ describe('useFormField', () => {
       expect(result.current.dirty).toBe(true);
     });
 
-    it('应该调用 onValueChange 回调', () => {
+    it('应该调用 onValueChange 回调', async () => {
       const onValueChange = vi.fn();
       const { result } = renderHook(() => useFormField({ onValueChange }));
 
-      act(() => {
+      await act(async () => {
         result.current.onChange('test');
       });
 
@@ -116,15 +116,15 @@ describe('useFormField', () => {
   });
 
   describe('重置', () => {
-    it('应该重置到初始状态', () => {
+    it('应该重置到初始状态', async () => {
       const { result } = renderHook(() => useFormField({ initialValue: 'initial' }));
 
-      act(() => {
+      await act(async () => {
         result.current.onChange('changed');
         result.current.setError('error');
       });
 
-      act(() => {
+      await act(async () => {
         result.current.reset();
       });
 
