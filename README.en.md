@@ -144,7 +144,7 @@ const field = useFormField<T>(options: FieldOptions<T>);
 |--------|------|---------|-------------|
 | `initialValue` | `T` | - | Initial value of the field |
 | `rules` | `ValidationRule<T>[]` | `[]` | Array of validation rules |
-| `validateOnChange` | `boolean` | `false` | Whether to validate on value change |
+| `validateOnChange` | `boolean` | `true` | Whether to validate on value change |
 | `validateOnBlur` | `boolean` | `true` | Whether to validate on blur |
 | `validateDebounce` | `number` | `0` | Validation debounce delay (ms) |
 | `disabled` | `boolean` | `false` | Whether the field is disabled |

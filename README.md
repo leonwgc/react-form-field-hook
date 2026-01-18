@@ -144,7 +144,7 @@ const field = useFormField<T>(options: FieldOptions<T>);
 |------|------|--------|------|
 | `initialValue` | `T` | - | 字段的初始值 |
 | `rules` | `ValidationRule<T>[]` | `[]` | 验证规则数组 |
-| `validateOnChange` | `boolean` | `false` | 值变化时是否验证 |
+| `validateOnChange` | `boolean` | `true` | 值变化时是否验证 |
 | `validateOnBlur` | `boolean` | `true` | 失去焦点时是否验证 |
 | `validateDebounce` | `number` | `0` | 验证防抖延迟（毫秒） |
 | `disabled` | `boolean` | `false` | 字段是否禁用 |
