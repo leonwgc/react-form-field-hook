@@ -108,13 +108,13 @@ describe('useFormFields', () => {
         }),
       );
 
-      expect(result.current.form.isDirty()).toBe(false);
+      expect(result.current.form.isDirty).toBe(false);
 
       await act(async () => {
         result.current.fields.username.onChange('jane');
       });
 
-      expect(result.current.form.isDirty()).toBe(true);
+      expect(result.current.form.isDirty).toBe(true);
     });
 
     it('isValid 应该检查所有字段的有效性', async () => {
@@ -127,7 +127,7 @@ describe('useFormFields', () => {
         }),
       );
 
-      expect(result.current.form.isValid()).toBe(true);
+      expect(result.current.form.isValid).toBe(true);
     });
   });
 });

@@ -186,14 +186,47 @@ const field = useFormField<T>(options: FieldOptions<T>);
 ### useFormFields
 
 ```tsx
-const { fields, validateAll, resetAll, getValues } = useFormFields(fieldsConfig);
+const { fields, form } = useFormFields(fieldsConfig);
+```
+
+#### Parameters
+
+`fieldsConfig` - Field configuration object, where keys are field names and values are `UseFormFieldOptions`
+
+```tsx
+type FieldsConfig<T> = {
+  [K in keyof T]: UseFormFieldOptions<T[K]>;
+};
 ```
 
 #### Returns
 
-- `fields` - Object containing all fields
-- `validateAll()` - Validate all fields
-- `resetAll()` - Reset all fields
+**`fields`** - Field collection object
+
+Contains all configured fields, each field is a complete `useFormField` return value (includes state and methods)
+
+```tsx
+fields.username.value
+fields.username.error
+fields.username.validate()
+fields.username.getAntdInputProps()
+// ... all useFormField properties and methods
+```
+
+**`form`** - Form-level operations object
+
+| Method/Property | Type | Description |
+|----------------|------|-------------|
+| `validateAll()` | `() => Promise<boolean>` | Validate all fields and return whether all are valid |
+| `resetAll()` | `() => void` | Reset all fields to initial state |
+| `getValues()` | `() => T` | Get all field values as an object |
+| `setValues()` | `(values: Partial<T>) => void` | Batch set field values |
+| `setInitialValues()` | `(values: Partial<T>) => void` | Batch set initial values (for edit forms) |
+| `getErrors()` | `() => Partial<Record<keyof T, string \| null>>` | Get all field errors |
+| `setDisabled()` | `(disabled: boolean) => void` | Set disabled state for all fields |
+| `isDirty` | `boolean` | Whether any field has been modified |
+| `isValid` | `boolean` | Whether all fields are valid |
+| `isDisabled` | `boolean` | Whether all fields are disabled |
 - `getValues()` - Get values of all fields as an object
 
 ### Built-in Validators
@@ -338,10 +371,114 @@ useEffect(() => {
   async function loadUser() {
     const user = await fetchUser(userId);
     userField.setInitialValue(user.name);
-    userField.setValue(user.name);
   }
   loadUser();
 }, [userId]);
+```
+
+### Managing Entire Form with useFormFields
+
+```tsx
+const { fields, form } = useFormFields({
+  username: {
+    initialValue: '',
+    rules: [validators.required(), validators.minLength(3)],
+  },
+  email: {
+    initialValue: '',
+    rules: [validators.required(), validators.email()],
+  },
+  age: {
+    initialValue: '',
+    rules: [validators.number(), validators.min(0)],
+  },
+});
+
+const handleSubmit = async () => {
+  if (await form.validateAll()) {
+    const formData = form.getValues();
+    await submitToAPI(formData);
+  }
+};
+
+const handleLoadData = async () => {
+  const data = await fetchUserData();
+  form.setInitialValues(data); // Batch set initial values
+};
+
+// Check form state
+const canSubmit = form.isValid && form.isDirty && !form.isDisabled;
+
+return (
+  <form>
+    <Input {...fields.username.getAntdInputProps()} />
+    {fields.username.renderError()}
+
+    <Input {...fields.email.getAntdInputProps()} />
+    {fields.email.renderError()}
+
+    <Input {...fields.age.getAntdInputProps()} />
+    {fields.age.renderError()}
+
+    <Button onClick={handleSubmit} disabled={!canSubmit}>
+      Submit
+    </Button>
+    <Button onClick={() => form.resetAll()}>Reset</Button>
+  </form>
+);
+```
+
+### Value Transform
+
+```tsx
+const phoneField = useFormField({
+  initialValue: '',
+  transform: (value: string) => {
+    // Auto format to 123-456-7890
+    const digits = value.replace(/\D/g, '');
+    if (digits.length <= 3) return digits;
+    if (digits.length <= 6) return `${digits.slice(0, 3)}-${digits.slice(3)}`;
+    return `${digits.slice(0, 3)}-${digits.slice(3, 6)}-${digits.slice(6, 10)}`;
+  },
+  rules: [validators.pattern(/^\d{3}-\d{3}-\d{4}$/, 'Format: 123-456-7890')],
+});
+```
+
+### Custom Comparison Function (compareWith)
+
+```tsx
+// Array comparison ignoring order
+const tagsField = useFormField({
+  initialValue: 'react,vue,angular',
+  compareWith: (a, b) => {
+    const arrA = a.split(',').sort();
+    const arrB = b.split(',').sort();
+    return JSON.stringify(arrA) === JSON.stringify(arrB);
+  },
+});
+// Entering "vue,react,angular" still keeps pristine state
+```
+
+### Conditional Validation
+
+```tsx
+const [isPremium, setIsPremium] = useState(false);
+
+const usernameField = useFormField({
+  initialValue: '',
+  rules: [
+    validators.required(),
+    validators.validate(
+      (value) => !isPremium || value.length >= 10,
+      'Premium username requires at least 10 characters'
+    ),
+  ],
+});
+
+// Re-validate when isPremium changes
+useEffect(() => {
+  usernameField.validate();
+}, [isPremium]);
 ```
 
 ## 🤝 Contributing

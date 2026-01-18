@@ -621,9 +621,9 @@ export interface FormActions<T extends Record<string, unknown>> {
   /** Set multiple field values at once */
   setValues: (values: Partial<T>) => void;
   /** Check if any field is dirty */
-  isDirty: () => boolean;
+  isDirty: boolean;
   /** Check if all fields are valid */
-  isValid: () => boolean;
+  isValid: boolean;
   /** Get all errors as an object */
   getErrors: () => Partial<Record<keyof T, string | null>>;
   /** Set initial values (useful for edit forms) */
@@ -631,7 +631,7 @@ export interface FormActions<T extends Record<string, unknown>> {
   /** Set disabled state for all fields */
   setDisabled: (disabled: boolean) => void;
   /** Check if all fields are disabled */
-  isDisabled: () => boolean;
+  isDisabled: boolean;
 }
 
 /**
@@ -720,11 +720,11 @@ export function useFormFields<T extends Record<string, unknown>>(config: {
     [fields],
   );
 
-  const isDirty = useCallback((): boolean => {
+  const isDirty = useMemo((): boolean => {
     return fieldNames.some((name) => fields[name].dirty);
   }, [fields, fieldNames]);
 
-  const isValid = useCallback((): boolean => {
+  const isValid = useMemo((): boolean => {
     return fieldNames.every((name) => fields[name].valid);
   }, [fields, fieldNames]);
 
@@ -741,7 +741,7 @@ export function useFormFields<T extends Record<string, unknown>>(config: {
     [fields, fieldNames],
   );
 
-  const isDisabled = useCallback((): boolean => {
+  const isDisabled = useMemo((): boolean => {
     return fieldNames.every((name) => fields[name].disabled);
   }, [fields, fieldNames]);
 

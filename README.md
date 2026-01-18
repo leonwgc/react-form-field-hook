@@ -186,14 +186,47 @@ const field = useFormField<T>(options: FieldOptions<T>);
 ### useFormFields
 
 ```tsx
-const { fields, validateAll, resetAll, getValues } = useFormFields(fieldsConfig);
+const { fields, form } = useFormFields(fieldsConfig);
+```
+
+#### 参数
+
+`fieldsConfig` - 字段配置对象，key 为字段名，value 为 `UseFormFieldOptions` 配置
+
+```tsx
+type FieldsConfig<T> = {
+  [K in keyof T]: UseFormFieldOptions<T[K]>;
+};
 ```
 
 #### 返回值
 
-- `fields` - 包含所有字段的对象
-- `validateAll()` - 验证所有字段
-- `resetAll()` - 重置所有字段
+**`fields`** - 字段集合对象
+
+包含所有配置的字段，每个字段都是完整的 `useFormField` 返回值（包含状态和方法）
+
+```tsx
+fields.username.value
+fields.username.error
+fields.username.validate()
+fields.username.getAntdInputProps()
+// ... 所有 useFormField 的属性和方法
+```
+
+**`form`** - 表单级操作对象
+
+| 方法/属性 | 类型 | 描述 |
+|---------|------|------|
+| `validateAll()` | `() => Promise<boolean>` | 验证所有字段并返回是否全部有效 |
+| `resetAll()` | `() => void` | 重置所有字段到初始状态 |
+| `getValues()` | `() => T` | 获取所有字段的值作为对象 |
+| `setValues()` | `(values: Partial<T>) => void` | 批量设置字段值 |
+| `setInitialValues()` | `(values: Partial<T>) => void` | 批量设置初始值（用于编辑表单） |
+| `getErrors()` | `() => Partial<Record<keyof T, string \| null>>` | 获取所有字段的错误信息 |
+| `setDisabled()` | `(disabled: boolean) => void` | 设置所有字段的禁用状态 |
+| `isDirty` | `boolean` | 是否有任何字段被修改 |
+| `isValid` | `boolean` | 是否所有字段都有效 |
+| `isDisabled` | `boolean` | 是否所有字段都被禁用 |
 - `getValues()` - 获取所有字段的值对象
 
 ### 内置验证器
@@ -338,10 +371,114 @@ useEffect(() => {
   async function loadUser() {
     const user = await fetchUser(userId);
     userField.setInitialValue(user.name);
-    userField.setValue(user.name);
   }
   loadUser();
 }, [userId]);
+```
+
+### 使用 useFormFields 管理整个表单
+
+```tsx
+const { fields, form } = useFormFields({
+  username: {
+    initialValue: '',
+    rules: [validators.required(), validators.minLength(3)],
+  },
+  email: {
+    initialValue: '',
+    rules: [validators.required(), validators.email()],
+  },
+  age: {
+    initialValue: '',
+    rules: [validators.number(), validators.min(0)],
+  },
+});
+
+const handleSubmit = async () => {
+  if (await form.validateAll()) {
+    const formData = form.getValues();
+    await submitToAPI(formData);
+  }
+};
+
+const handleLoadData = async () => {
+  const data = await fetchUserData();
+  form.setInitialValues(data); // 批量设置初始值
+};
+
+// 检查表单状态
+const canSubmit = form.isValid && form.isDirty && !form.isDisabled;
+
+return (
+  <form>
+    <Input {...fields.username.getAntdInputProps()} />
+    {fields.username.renderError()}
+
+    <Input {...fields.email.getAntdInputProps()} />
+    {fields.email.renderError()}
+
+    <Input {...fields.age.getAntdInputProps()} />
+    {fields.age.renderError()}
+
+    <Button onClick={handleSubmit} disabled={!canSubmit}>
+      提交
+    </Button>
+    <Button onClick={() => form.resetAll()}>重置</Button>
+  </form>
+);
+```
+
+### 值转换（Transform）
+
+```tsx
+const phoneField = useFormField({
+  initialValue: '',
+  transform: (value: string) => {
+    // 自动格式化为 123-456-7890
+    const digits = value.replace(/\D/g, '');
+    if (digits.length <= 3) return digits;
+    if (digits.length <= 6) return `${digits.slice(0, 3)}-${digits.slice(3)}`;
+    return `${digits.slice(0, 3)}-${digits.slice(3, 6)}-${digits.slice(6, 10)}`;
+  },
+  rules: [validators.pattern(/^\d{3}-\d{3}-\d{4}$/, '格式：123-456-7890')],
+});
+```
+
+### 自定义比较函数（compareWith）
+
+```tsx
+// 忽略顺序的数组比较
+const tagsField = useFormField({
+  initialValue: 'react,vue,angular',
+  compareWith: (a, b) => {
+    const arrA = a.split(',').sort();
+    const arrB = b.split(',').sort();
+    return JSON.stringify(arrA) === JSON.stringify(arrB);
+  },
+});
+// 输入 "vue,react,angular" 仍然是 pristine 状态
+```
+
+### 条件验证
+
+```tsx
+const [isPremium, setIsPremium] = useState(false);
+
+const usernameField = useFormField({
+  initialValue: '',
+  rules: [
+    validators.required(),
+    validators.validate(
+      (value) => !isPremium || value.length >= 10,
+      '高级用户名至少需要 10 个字符'
+    ),
+  ],
+});
+
+// 当 isPremium 改变时重新验证
+useEffect(() => {
+  usernameField.validate();
+}, [isPremium]);
 ```
 
 ## 🤝 贡献
