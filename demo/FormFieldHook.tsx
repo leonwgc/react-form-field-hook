@@ -562,7 +562,7 @@ const SelectDateExample: React.FC = () => {
     rules: [validators.validate((value) => !!value, 'Please select a date')],
   });
 
-  const countryField = useFormField<string | undefined>({
+  const countryField = useFormField({
     initialValue: undefined,
     rules: [validators.required('Please select a country')],
   });

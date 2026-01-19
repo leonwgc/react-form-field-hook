@@ -10,7 +10,7 @@ import { useState, useCallback, useRef, useEffect, useMemo } from 'react';
  */
 export type ValidationRule<T = string> = (
   value: T,
-  fieldName?: string,
+  fieldName?: string
 ) => string | null | undefined | Promise<string | null | undefined>;
 
 /**
@@ -96,7 +96,7 @@ export const validators = {
   validate:
     <T,>(
       validator: (value: T) => boolean | Promise<boolean>,
-      message: string,
+      message: string
     ): ValidationRule<T> =>
     async (value: T) => {
       const isValid = await Promise.resolve(validator(value));
@@ -176,7 +176,7 @@ export interface FieldActions<T = string> {
   getHTMLInputProps: () => {
     value: T;
     onChange: (
-      e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+      e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
     ) => void;
     onBlur: () => void;
     onFocus: () => void;
@@ -186,7 +186,7 @@ export interface FieldActions<T = string> {
   getAntdInputProps: () => {
     value: T;
     onChange: (
-      e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+      e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
     ) => void;
     onBlur: () => void;
     onFocus: () => void;
@@ -300,7 +300,7 @@ export interface FieldConfig<T = string> extends UseFormFieldOptions<T> {
  * };
  */
 export function useFormField<T = string>(
-  options: UseFormFieldOptions<T> = {},
+  options: UseFormFieldOptions<T> = {}
 ): FieldState<T> & FieldActions<T> {
   const {
     initialValue = '' as T,
@@ -326,6 +326,7 @@ export function useFormField<T = string>(
   const initialValueRef = useRef(initialValue);
   const validateTimeoutRef = useRef<NodeJS.Timeout>();
   const validationCounterRef = useRef(0);
+  const valueRef = useRef<T>(initialValue); // Store latest value in ref
 
   // Calculate derived states with memoization
   const dirty = useMemo(() => {
@@ -372,7 +373,7 @@ export function useFormField<T = string>(
         return 'Validation error occurred';
       }
     },
-    [rules],
+    [rules]
   );
 
   /**
@@ -399,7 +400,7 @@ export function useFormField<T = string>(
         validateTimeoutRef.current = setTimeout(validate, validateDebounce);
       }
     },
-    [runValidation, validateDebounce, onValidationChange],
+    [runValidation, validateDebounce, onValidationChange]
   );
 
   /**
@@ -410,6 +411,7 @@ export function useFormField<T = string>(
       if (disabled) return;
       const transformedValue = transform ? transform(newValue) : newValue;
       setValue(transformedValue);
+      valueRef.current = transformedValue; // Update ref with latest value
 
       if (onValueChange) {
         onValueChange(transformedValue);
@@ -419,7 +421,7 @@ export function useFormField<T = string>(
         triggerValidation(transformedValue);
       }
     },
-    [disabled, validateOnChange, triggerValidation, onValueChange, transform],
+    [disabled, validateOnChange, triggerValidation, onValueChange, transform]
   );
 
   /**
@@ -430,9 +432,9 @@ export function useFormField<T = string>(
     setFocused(false);
 
     if (validateOnBlur) {
-      triggerValidation(value, true); // Immediate validation on blur
+      triggerValidation(valueRef.current, true); // Use ref to get latest value
     }
-  }, [value, validateOnBlur, triggerValidation]);
+  }, [validateOnBlur, triggerValidation]);
 
   /**
    * Handle focus event
@@ -462,6 +464,7 @@ export function useFormField<T = string>(
    */
   const reset = useCallback(() => {
     setValue(initialValueRef.current);
+    valueRef.current = initialValueRef.current; // Update ref
     setTouched(false);
     setVisited(false);
     setFocused(false);
@@ -479,6 +482,7 @@ export function useFormField<T = string>(
   const setInitialValue = useCallback((newInitialValue: T) => {
     initialValueRef.current = newInitialValue;
     setValue(newInitialValue);
+    valueRef.current = newInitialValue; // Update ref
     setTouched(false);
     setError(null);
   }, []);
@@ -490,12 +494,13 @@ export function useFormField<T = string>(
     (newValue: T) => {
       const transformedValue = transform ? transform(newValue) : newValue;
       setValue(transformedValue);
+      valueRef.current = transformedValue; // Update ref
 
       if (onValueChange) {
         onValueChange(transformedValue);
       }
     },
-    [onValueChange, transform],
+    [onValueChange, transform]
   );
 
   /**
@@ -509,7 +514,7 @@ export function useFormField<T = string>(
       onFocus: handleFocus,
       disabled,
     }),
-    [value, handleChange, handleBlur, handleFocus, disabled],
+    [value, handleChange, handleBlur, handleFocus, disabled]
   );
 
   /**
@@ -519,13 +524,13 @@ export function useFormField<T = string>(
     () => ({
       value,
       onChange: (
-        e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+        e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
       ) => handleChange(e.target.value as T),
       onBlur: handleBlur,
       onFocus: handleFocus,
       disabled,
     }),
-    [value, handleChange, handleBlur, handleFocus, disabled],
+    [value, handleChange, handleBlur, handleFocus, disabled]
   );
 
   /**
@@ -535,7 +540,7 @@ export function useFormField<T = string>(
     () => ({
       value,
       onChange: (
-        e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+        e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
       ) => handleChange(e.target.value as T),
       onBlur: handleBlur,
       onFocus: handleFocus,
@@ -545,7 +550,7 @@ export function useFormField<T = string>(
         | undefined,
       disabled,
     }),
-    [value, handleChange, handleBlur, handleFocus, touched, invalid, disabled],
+    [value, handleChange, handleBlur, handleFocus, touched, invalid, disabled]
   );
 
   /**
@@ -556,7 +561,7 @@ export function useFormField<T = string>(
       if (!touched || !invalid || !error || focused) return null;
       return <div className={className}>{error}</div>;
     },
-    [touched, invalid, error, focused],
+    [touched, invalid, error, focused]
   );
 
   /**
@@ -683,7 +688,7 @@ export function useFormFields<T extends Record<string, unknown>>(config: {
 
   const validateAll = useCallback(async (): Promise<boolean> => {
     const results = await Promise.all(
-      fieldNames.map((name) => fields[name].validate()),
+      fieldNames.map((name) => fields[name].validate())
     );
     return results.every((valid) => valid);
   }, [fields, fieldNames]);
@@ -694,7 +699,7 @@ export function useFormFields<T extends Record<string, unknown>>(config: {
 
   const getValues = useCallback((): T => {
     return Object.fromEntries(
-      fieldNames.map((name) => [name, fields[name].value]),
+      fieldNames.map((name) => [name, fields[name].value])
     ) as T;
   }, [fields, fieldNames]);
 
@@ -706,7 +711,7 @@ export function useFormFields<T extends Record<string, unknown>>(config: {
         }
       });
     },
-    [fields],
+    [fields]
   );
 
   const setInitialValues = useCallback(
@@ -717,7 +722,7 @@ export function useFormFields<T extends Record<string, unknown>>(config: {
         }
       });
     },
-    [fields],
+    [fields]
   );
 
   const isDirty = useMemo((): boolean => {
@@ -730,7 +735,7 @@ export function useFormFields<T extends Record<string, unknown>>(config: {
 
   const getErrors = useCallback((): Partial<Record<keyof T, string | null>> => {
     return Object.fromEntries(
-      fieldNames.map((name) => [name, fields[name].error]),
+      fieldNames.map((name) => [name, fields[name].error])
     ) as Partial<Record<keyof T, string | null>>;
   }, [fields, fieldNames]);
 
@@ -738,7 +743,7 @@ export function useFormFields<T extends Record<string, unknown>>(config: {
     (disabled: boolean) => {
       fieldNames.forEach((name) => fields[name].setDisabled(disabled));
     },
-    [fields, fieldNames],
+    [fields, fieldNames]
   );
 
   const isDisabled = useMemo((): boolean => {
@@ -769,7 +774,7 @@ export function useFormFields<T extends Record<string, unknown>>(config: {
       getErrors,
       setDisabled,
       isDisabled,
-    ],
+    ]
   );
 
   return { fields, form };
