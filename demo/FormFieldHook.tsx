@@ -1276,6 +1276,20 @@ const FormFieldHook: React.FC = () => {
               </li>
             </ul>
             <Title level={5} style={{ marginTop: 8 }}>
+              Form State (useFormFields):
+            </Title>
+            <ul>
+              <li>
+                <Text code>isDirty</Text> - Check if any field is dirty
+              </li>
+              <li>
+                <Text code>isValid</Text> - Check if all fields are valid
+              </li>
+              <li>
+                <Text code>isDisabled</Text> - Check if form is disabled
+              </li>
+            </ul>
+            <Title level={5} style={{ marginTop: 8 }}>
               Form Actions (useFormFields):
             </Title>
             <ul>
@@ -1295,10 +1309,7 @@ const FormFieldHook: React.FC = () => {
                 <Text code>setInitialValues()</Text> - Set initial values
               </li>
               <li>
-                <Text code>isDirty()</Text> - Check if any field is dirty
-              </li>
-              <li>
-                <Text code>isValid()</Text> - Check if all fields are valid
+                <Text code>setDisabled()</Text> - Set form disabled state
               </li>
               <li>
                 <Text code>getErrors()</Text> - Get all errors
